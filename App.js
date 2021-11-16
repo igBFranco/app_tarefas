@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import AppLoading from 'expo-app-loading';
-import { AntDesign, Entypo } from '@expo/vector-icons';
+import { AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
 import { useFonts, Lato_400Regular } from '@expo-google-fonts/lato';
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView, TouchableHighlight, Modal, TextInput, Alert } from 'react-native';
 
@@ -48,7 +48,7 @@ export default function App() {
 
   return (
       
-    <ScrollView style={{flex:1}}>
+    <ScrollView contentContainerStyle={styles.appFundo}>
         <StatusBar hidden />
         <Modal 
             animationType="slide"
@@ -86,13 +86,13 @@ export default function App() {
                 <Text>{val.tarefa}</Text>
             </View>
             <View style={{alignItems:'flex-end', flex:1, padding:10}}>
-                <TouchableOpacity onPress={()=> deletarTarefa(val.id)}><AntDesign name="minuscircleo" size={30} color="black" /></TouchableOpacity>
+                <TouchableOpacity onPress={()=> deletarTarefa(val.id)}><Ionicons name="remove-circle-outline" size={26} color="gray" /></TouchableOpacity>
             </View>
         </View>);
         })
         }
 
-        <View style={{flex:1, alignItems:'center'}}>
+        <View style={{flex:1, alignItems:'center', width:'100%',}}>
             <TouchableOpacity style={styles.btnAddTarefa} onPress={()=> setModal(true)}><Text style={{textAlign:'center', color:'white', fontSize:18}}><Entypo name="plus" size={20} color="white" /> Nova Tarefa</Text></TouchableOpacity>
         </View>
     </ScrollView>
@@ -104,6 +104,12 @@ const styles = StyleSheet.create({
     width:'100%',
     height:100,
     resizeMode: "cover"
+  },
+  appFundo:{
+    flex:1,
+    backgroundColor:'#E7E7E7',
+    justifyContent:"center",
+    alignItems:"center",
   },
   coverView:{
     width:'100%',
@@ -118,13 +124,15 @@ const styles = StyleSheet.create({
     fontFamily:'Lato_400Regular'
   },
   tarefaSingle :{
-    marginTop:30,
-    width:'100%',
-    borderBottomWidth:1,
+    marginTop:7,
+    width:'95%',
+    //borderBottomWidth:1,
+    justifyContent:"center",
+    alignItems:"center",
     borderRadius:10,
-    borderColor:'black',
     flexDirection:'row',
-    padding:10
+    padding:10,
+    backgroundColor:'white'
   },
   centeredView: {
       flex:1,
@@ -165,11 +173,10 @@ const styles = StyleSheet.create({
   },
   btnAddTarefa:{
     width:'90%',
-    padding:8,
     backgroundColor:'orange',
     marginTop:20,
     borderRadius:20,
-    padding:15,
+    padding:10,
   }
 
 
