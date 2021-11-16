@@ -28,6 +28,8 @@ export default function App() {
 
     const [modal, setModal] = useState(true);
 
+    const [tarefaAtual, setTarefaAtual] = useState('');
+
     let [fontsLoaded] = useFonts({
       Lato_400Regular,
     });
@@ -46,12 +48,26 @@ export default function App() {
     }
 
 
+    function addTarefa(){
+
+      setModal(!modal);
+
+      let id = 0;
+      if(tarefas.length > 0){
+        id = tarefas[tarefas.length-1].id + 1;
+      }
+
+      let tarefa = {id:id, tarefa:tarefaAtual};
+
+      setarTarefas([...tarefas, tarefa]);
+    }
+
   return (
       
     <ScrollView contentContainerStyle={styles.appFundo}>
         <StatusBar hidden />
         <Modal 
-            animationType="slide"
+            animationType="fade"
             transparent={true}
             visible={modal}
             onRequestClose={()=> {
@@ -60,12 +76,10 @@ export default function App() {
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <TextInput autoFocus={true}></TextInput>
+                    <TextInput onChangeText={text => setTarefaAtual(text)} autoFocus={true}></TextInput>
                     <TouchableHighlight 
                     style={{...styles.openButton, backgroundColor:"#2196f3"}}
-                    onPress={()=> {
-                        setModal(!modal);
-                    }}
+                    onPress={() => addTarefa()}
                     >
                         <Text style={styles.textStyle}>Adicionar Tarefa</Text>
                     </TouchableHighlight>
