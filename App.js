@@ -1,9 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import { AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
 import { useFonts, Lato_400Regular } from '@expo-google-fonts/lato';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView, TouchableHighlight, Modal, TextInput, Alert } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView, TouchableHighlight, Modal, TextInput, Alert, AsyncStorage } from 'react-native';
 
 export default function App() {
 
@@ -11,20 +11,7 @@ export default function App() {
 
     console.disableYellowBox = true;
 
-    const [tarefas, setarTarefas] = useState([
-        {
-            id:1,
-            tarefa: 'Minha primeira tarefa.'
-        },
-        {
-            id:2,
-            tarefa: 'Minha segunda tarefa.'
-        },
-        {
-            id:3,
-            tarefa: 'Minha terceira tarefa.'
-        }
-    ]);
+    const [tarefas, setarTarefas] = useState([]);
 
     const [modal, setModal] = useState(true);
 
@@ -33,6 +20,19 @@ export default function App() {
     let [fontsLoaded] = useFonts({
       Lato_400Regular,
     });
+
+    useEffect(()=> {
+
+      (async ()=> {
+        try {
+          let tarefasAtual = await AsyncStorage.getItem('tarefas');
+          if(tarefasAtual == null)
+            setarTarefas([]);
+          else
+            setarTarefas(JSON.parse(tarefasAtual));
+        } catch (error) {}
+      })();
+    },[])
 
     if (!fontsLoaded) {
       return <AppLoading />;
@@ -45,6 +45,15 @@ export default function App() {
         });
 
         setarTarefas(newTarefas);
+
+        (async () => {
+          try {
+            await AsyncStorage.setItem('tarefas', JSON.stringify(newTarefas));
+            //console.log('chamado');
+          } catch (error) {
+            // Error saving data
+          }
+        })();
     }
 
 
@@ -60,6 +69,14 @@ export default function App() {
       let tarefa = {id:id, tarefa:tarefaAtual};
 
       setarTarefas([...tarefas, tarefa]);
+
+      (async () => {
+        try {
+          await AsyncStorage.setItem('tarefas', JSON.stringify([...tarefas,tarefa]));
+        } catch (error) {
+          // Error saving data
+        }
+      })();
     }
 
   return (
