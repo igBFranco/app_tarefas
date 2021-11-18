@@ -2,6 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import { AntDesign, Entypo, Ionicons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/Ionicons';
+import ActionButton from 'react-native-action-button';
 import { useFonts, Lato_400Regular } from '@expo-google-fonts/lato';
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView, TouchableHighlight, Modal, TextInput, Alert, AsyncStorage } from 'react-native';
 
@@ -13,7 +15,7 @@ export default function App() {
 
     const [tarefas, setarTarefas] = useState([]);
 
-    const [modal, setModal] = useState(true);
+    const [modal, setModal] = useState(false);
 
     const [tarefaAtual, setTarefaAtual] = useState('');
 
@@ -39,7 +41,9 @@ export default function App() {
     }
 
     function deletarTarefa(id){
-        alert('Tarefa com Id= '+id+' foi deletada com sucesso!');
+        const alertRemover = () =>
+          Alert.alert('Tarefa Removida','Tarefa foi deletada com sucesso!',[{text:"Ok", onPress: ()=> console.log('Removido!')}]);
+          alertRemover();
         let newTarefas = tarefas.filter(function(val){
             return val.id != id;
         });
@@ -81,6 +85,7 @@ export default function App() {
 
   return (
       
+    <View style={{flex:1, backgroundColor: '#f3f3f3'}}>
     <ScrollView contentContainerStyle={styles.appFundo}>
         <StatusBar hidden />
         <Modal 
@@ -93,13 +98,17 @@ export default function App() {
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <TextInput onChangeText={text => setTarefaAtual(text)} autoFocus={true}></TextInput>
-                    <TouchableHighlight 
-                    style={{...styles.openButton, backgroundColor:"#2196f3"}}
-                    onPress={() => addTarefa()}
-                    >
-                        <Text style={styles.textStyle}>Adicionar Tarefa</Text>
-                    </TouchableHighlight>
+                    <View style={{flex:2}}>
+                      <TextInput style={styles.input} onChangeText={text => setTarefaAtual(text)} autoFocus={true} multiline={true} placeholder="Nova Tarefa..." maxLength={100}></TextInput>
+                    </View>
+                    <View style={{ justifyContent:'center'}}>
+                        <TouchableHighlight 
+                        style={{...styles.openButton}}
+                        onPress={() => addTarefa()}
+                        >
+                            <Text style={styles.textStyle}>Adicionar Tarefa</Text>
+                        </TouchableHighlight>
+                    </View>
                 </View>
             </View>
         </Modal>
@@ -108,12 +117,15 @@ export default function App() {
             <Text style={styles.textHeader}>Lista de Tarefas</Text>
           </View>
         </ImageBackground>
-
-
+        
         {
         tarefas.map(function(val){
-        return (<View style={styles.tarefaSingle}>
-            <View style={{flex:1, width:'100%', padding:10}}>
+        return (
+        <View style={styles.tarefaSingle}>
+            <View>
+
+          </View>
+            <View style={{flex:8, width:'100%', padding:10}}>
                 <Text>{val.tarefa}</Text>
             </View>
             <View style={{alignItems:'flex-end', flex:1, padding:10}}>
@@ -122,11 +134,13 @@ export default function App() {
         </View>);
         })
         }
-
-        <View style={{flex:1, alignItems:'center', width:'100%',}}>
-            <TouchableOpacity style={styles.btnAddTarefa} onPress={()=> setModal(true)}><Text style={{textAlign:'center', color:'white', fontSize:18}}><Entypo name="plus" size={20} color="white" /> Nova Tarefa</Text></TouchableOpacity>
-        </View>
     </ScrollView>
+    <ActionButton buttonColor="#0073e6">
+          <ActionButton.Item buttonColor='orange' title="Nova Tarefa"  onPress={()=> setModal(true)}>
+            <Icon name="md-create" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+        </ActionButton>
+    </View>
   );
 }
 
@@ -137,7 +151,6 @@ const styles = StyleSheet.create({
     resizeMode: "cover"
   },
   appFundo:{
-    flex:1,
     backgroundColor:'#E7E7E7',
     justifyContent:"center",
     alignItems:"center",
@@ -177,6 +190,9 @@ const styles = StyleSheet.create({
       borderRadius:20,
       padding:35,
       alignItems:"center",
+      justifyContent:'center',
+      width:'80%',
+      height:'60%',
       shadowColor:"#000",
       shadowOffset: {
           width:0,
@@ -188,19 +204,28 @@ const styles = StyleSheet.create({
       zIndex:5
   },
   openButton: {
-      backgroundColor:"#F194FF",
+      backgroundColor:"orange",
       borderRadius:20,
-      padding:10,
-      elevation:2
+      width:'100%',
+      padding:15,
+      elevation:2,
   },
   textStyle: {
       color:"white",
       fontWeight: "bold",
-      textAlign: "center"
+      textAlign: "center",
+      fontSize:18,
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center"
+  },
+  input: {
+    margin:20,
+    backgroundColor:'#E7E7E7',
+    borderRadius:10,
+    padding:10,
+
   },
   btnAddTarefa:{
     width:'90%',
@@ -208,7 +233,13 @@ const styles = StyleSheet.create({
     marginTop:20,
     borderRadius:20,
     padding:10,
-  }
-
-
+  },
+  actionButtonIcon: {
+    position:'absolute',
+    fontSize: 20,
+    height: 22,
+    color: 'white',
+    elevation:5,
+    zIndex:5
+  },
 });
