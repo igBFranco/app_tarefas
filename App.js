@@ -87,7 +87,7 @@ export default function App() {
       
     <View style={{flex:1, backgroundColor: '#f3f3f3'}}>
     <ScrollView contentContainerStyle={styles.appFundo}>
-        <StatusBar hidden />
+        <StatusBar style='light' />
         <Modal 
             animationType="fade"
             transparent={true}
